@@ -5,6 +5,26 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import {
+  FileText,
+  Upload,
+  Search,
+  ChartBar,
+  Lightbulb,
+  Shield,
+  Users,
+  MessageSquare,
+  Activity,
+  MapPin,
+  Scale,
+  Pill,
+  Hospital,
+  Clock,
+  CheckCircle2,
+  AlertCircle,
+  TrendingUp,
+  Award
+} from 'lucide-react';
 
 export default function HomePage() {
   const [file, setFile] = useState<File | null>(null);
@@ -35,7 +55,7 @@ export default function HomePage() {
           ''
         )
       );
-      
+
       const documentId = `doc-${Date.now()}`;
       const tempData = {
         fileName: file.name,
@@ -43,7 +63,7 @@ export default function HomePage() {
         fileSize: file.size,
         documentId: documentId
       };
-      
+
       localStorage.setItem(`document-${documentId}`, JSON.stringify(tempData));
       router.push(`/results/${documentId}`);
     } catch (err) {
@@ -53,35 +73,35 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#EEF8FF] via-white to-[#EEF8FF]">
+    <div className="min-h-screen bg-background">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-border">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-[#0B7BD6] to-[#66D1C9] rounded-xl flex items-center justify-center text-white font-bold text-xl">
+            <div className="w-10 h-10 bg-primary rounded flex items-center justify-center text-primary-foreground font-bold text-lg">
               V
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-[#0B7BD6] to-[#66D1C9] bg-clip-text text-transparent">
+            <span className="text-2xl font-bold text-foreground">
               VitalView AI
             </span>
           </div>
           <div className="hidden md:flex items-center gap-8">
-            <Link href="/" className="text-[#1A1A1A] hover:text-[#0B7BD6] transition-colors font-medium">
+            <Link href="/" className="text-foreground hover:text-primary transition-colors font-medium">
               Home
             </Link>
-            <Link href="#about" className="text-[#1A1A1A] hover:text-[#0B7BD6] transition-colors font-medium">
+            <Link href="#about" className="text-foreground hover:text-primary transition-colors font-medium">
               About
             </Link>
-            <Link href="/nearby-care" className="text-[#1A1A1A] hover:text-[#0B7BD6] transition-colors font-medium">
+            <Link href="/nearby-care" className="text-foreground hover:text-primary transition-colors font-medium">
               Find Care
             </Link>
-            <Link href="/bmi" className="text-[#1A1A1A] hover:text-[#0B7BD6] transition-colors font-medium">
+            <Link href="/bmi" className="text-foreground hover:text-primary transition-colors font-medium">
               BMI Calculator
             </Link>
-            <Link href="#upload" className="text-[#1A1A1A] hover:text-[#0B7BD6] transition-colors font-medium">
+            <Link href="#upload" className="text-foreground hover:text-primary transition-colors font-medium">
               Upload Report
             </Link>
-            <Button className="bg-gradient-to-r from-[#0B7BD6] to-[#66D1C9] hover:opacity-90 transition-opacity rounded-full px-6">
+            <Button className="bg-primary hover:bg-primary/90 px-6">
               Get Started
             </Button>
           </div>
@@ -97,20 +117,20 @@ export default function HomePage() {
             transition={{ duration: 0.8 }}
             className="text-center max-w-4xl mx-auto"
           >
-            <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-[#66D1C9]/30 rounded-full px-6 py-3 mb-8">
-              <span className="text-2xl">✨</span>
-              <span className="text-sm font-medium text-[#0B7BD6]">Powered by Advanced Medical AI</span>
+            <div className="inline-flex items-center gap-2 bg-secondary border border-border rounded px-4 py-2 mb-8">
+              <Award className="w-4 h-4 text-primary" />
+              <span className="text-sm font-medium text-primary">Powered by Advanced Medical AI</span>
             </div>
-            
-            <h1 className="text-6xl md:text-7xl font-bold text-[#1A1A1A] mb-6 leading-tight">
+
+            <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
               Understand Your Health
               <br />
-              <span className="bg-gradient-to-r from-[#0B7BD6] to-[#66D1C9] bg-clip-text text-transparent">
+              <span className="text-primary">
                 in Seconds
               </span>
             </h1>
-            
-            <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed">
+
+            <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed">
               AI-powered medical report analysis with clear explanations and auto-generated health visuals.
               Transform complex lab results into insights you can actually understand.
             </p>
@@ -121,13 +141,12 @@ export default function HomePage() {
                 onClick={() => fileInputRef.current?.click()}
                 className="relative cursor-pointer group"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-[#0B7BD6] to-[#66D1C9] rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
-                <div className="relative bg-white/80 backdrop-blur-xl border-2 border-dashed border-[#0B7BD6]/30 rounded-3xl p-12 hover:border-[#0B7BD6] transition-all">
-                  <div className="text-6xl mb-4">🩺</div>
-                  <p className="text-lg font-semibold text-[#1A1A1A] mb-2">
+                <div className="relative bg-white border-2 border-dashed border-border rounded-lg p-12 hover:border-primary transition-all hover:shadow-md">
+                  <FileText className="w-16 h-16 mx-auto mb-4 text-primary" />
+                  <p className="text-lg font-semibold text-foreground mb-2">
                     {file ? file.name : 'Upload Medical Report'}
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-muted-foreground">
                     PDF format • Blood tests, prescriptions, lab results
                   </p>
                   <input
@@ -141,7 +160,8 @@ export default function HomePage() {
               </div>
 
               {error && (
-                <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-600 text-sm">
+                <div className="mt-4 p-4 bg-destructive/10 border border-destructive rounded text-destructive text-sm flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4" />
                   {error}
                 </div>
               )}
@@ -150,16 +170,16 @@ export default function HomePage() {
                 onClick={handleAnalyze}
                 disabled={!file || loading}
                 size="lg"
-                className="mt-6 bg-gradient-to-r from-[#0B7BD6] to-[#66D1C9] hover:opacity-90 transition-opacity rounded-full px-12 py-7 text-lg font-semibold shadow-xl shadow-[#0B7BD6]/20 disabled:opacity-50"
+                className="mt-6 w-full md:w-auto bg-primary hover:bg-primary/90 px-12 disabled:opacity-50"
               >
                 {loading ? (
                   <>
-                    <span className="mr-2 animate-spin">⏳</span>
+                    <Clock className="w-4 h-4 mr-2 animate-spin" />
                     Analyzing Your Report...
                   </>
                 ) : (
                   <>
-                    <span className="mr-2">🔍</span>
+                    <Search className="w-4 h-4 mr-2" />
                     Analyze Now
                   </>
                 )}
@@ -168,18 +188,22 @@ export default function HomePage() {
 
             {/* Sample Visuals Carousel */}
             <div className="mt-16 flex flex-wrap justify-center gap-4">
-              {['Blood Sugar Chart', 'Cholesterol Analysis', 'Vitamin D Status'].map((label, i) => (
+              {[
+                { label: 'Blood Sugar Chart', icon: ChartBar },
+                { label: 'Cholesterol Analysis', icon: Activity },
+                { label: 'Vitamin D Status', icon: TrendingUp }
+              ].map((item, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.2 * i }}
-                  className="bg-white/60 backdrop-blur-sm border border-gray-200 rounded-2xl px-6 py-4 flex items-center gap-3"
+                  className="bg-secondary border border-border rounded-lg px-6 py-4 flex items-center gap-3"
                 >
-                  <div className="w-10 h-10 bg-gradient-to-br from-[#0B7BD6] to-[#66D1C9] rounded-xl flex items-center justify-center text-white text-xl">
-                    {['📊', '🫀', '☀️'][i]}
+                  <div className="w-10 h-10 bg-primary rounded flex items-center justify-center text-primary-foreground">
+                    <item.icon className="w-5 h-5" />
                   </div>
-                  <span className="font-medium text-[#1A1A1A]">{label}</span>
+                  <span className="font-medium text-foreground">{item.label}</span>
                 </motion.div>
               ))}
             </div>
@@ -188,22 +212,22 @@ export default function HomePage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-20 px-6 bg-white/50">
+      <section className="py-20 px-6 bg-secondary/30">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-[#1A1A1A] mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
               How It Works
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-muted-foreground">
               Three simple steps to clarity
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { icon: '📤', title: 'Upload Report', desc: 'Drop your PDF medical report, lab results, or blood test' },
-              { icon: '🤖', title: 'AI Analyzes', desc: 'Our advanced AI reads and interprets your results in seconds' },
-              { icon: '📊', title: 'Get Insights + Visuals', desc: 'Receive clear explanations with interactive charts and graphics' }
+              { icon: Upload, title: 'Upload Report', desc: 'Drop your PDF medical report, lab results, or blood test' },
+              { icon: Search, title: 'AI Analyzes', desc: 'Our advanced AI reads and interprets your results in seconds' },
+              { icon: ChartBar, title: 'Get Insights + Visuals', desc: 'Receive clear explanations with interactive charts and graphics' }
             ].map((step, i) => (
               <motion.div
                 key={i}
@@ -213,14 +237,14 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 className="relative"
               >
-                <div className="bg-white backdrop-blur-xl border border-gray-200 rounded-3xl p-8 hover:shadow-2xl hover:border-[#66D1C9] transition-all">
-                  <div className="w-16 h-16 bg-gradient-to-br from-[#0B7BD6] to-[#66D1C9] rounded-2xl flex items-center justify-center text-3xl mb-6">
-                    {step.icon}
+                <div className="bg-white border border-border rounded-lg p-8 hover:shadow-lg hover:border-primary/50 transition-all">
+                  <div className="w-16 h-16 bg-primary rounded flex items-center justify-center mb-6">
+                    <step.icon className="w-8 h-8 text-primary-foreground" />
                   </div>
-                  <h3 className="text-2xl font-bold text-[#1A1A1A] mb-3">
+                  <h3 className="text-2xl font-bold text-foreground mb-3">
                     {i + 1}. {step.title}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed">
+                  <p className="text-muted-foreground leading-relaxed">
                     {step.desc}
                   </p>
                 </div>
@@ -234,20 +258,20 @@ export default function HomePage() {
       <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-[#1A1A1A] mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
               What You'll See
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-muted-foreground">
               Comprehensive insights tailored to you
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { icon: '📋', title: 'Your Health Summary', desc: 'Top findings in plain English', color: 'from-blue-500 to-cyan-500' },
-              { icon: '⚠️', title: 'Key Problems Identified', desc: 'What needs attention', color: 'from-orange-500 to-red-500' },
-              { icon: '📈', title: 'Visual Insights', desc: 'Charts, graphs, test tubes', color: 'from-purple-500 to-pink-500' },
-              { icon: '💡', title: 'Actionable Advice', desc: 'Daily steps you can take', color: 'from-green-500 to-teal-500' }
+              { icon: FileText, title: 'Your Health Summary', desc: 'Top findings in plain English' },
+              { icon: AlertCircle, title: 'Key Problems Identified', desc: 'What needs attention' },
+              { icon: ChartBar, title: 'Visual Insights', desc: 'Charts, graphs, test tubes' },
+              { icon: Lightbulb, title: 'Actionable Advice', desc: 'Daily steps you can take' }
             ].map((item, i) => (
               <motion.div
                 key={i}
@@ -255,15 +279,15 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.1 * i }}
                 viewport={{ once: true }}
-                className="bg-white border border-gray-200 rounded-3xl p-8 hover:shadow-xl transition-all group cursor-pointer"
+                className="bg-white border border-border rounded-lg p-8 hover:shadow-md transition-all group cursor-pointer"
               >
-                <div className={`w-14 h-14 bg-gradient-to-br ${item.color} rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform`}>
-                  {item.icon}
+                <div className="w-14 h-14 bg-secondary rounded flex items-center justify-center mb-4 group-hover:bg-primary transition-colors">
+                  <item.icon className="w-7 h-7 text-primary group-hover:text-primary-foreground" />
                 </div>
-                <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">
+                <h3 className="text-xl font-bold text-foreground mb-2">
                   {item.title}
                 </h3>
-                <p className="text-gray-600 text-sm">
+                <p className="text-muted-foreground text-sm">
                   {item.desc}
                 </p>
               </motion.div>
@@ -273,43 +297,43 @@ export default function HomePage() {
       </section>
 
       {/* Example Visual Analysis */}
-      <section className="py-20 px-6 bg-gradient-to-br from-[#EEF8FF] to-white">
+      <section className="py-20 px-6 bg-secondary/30">
         <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-white border border-gray-200 rounded-3xl p-12 shadow-2xl"
+            className="bg-white border border-border rounded-lg p-12 shadow-sm"
           >
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-[#1A1A1A] mb-3">
+              <h2 className="text-3xl font-bold text-foreground mb-3">
                 We Turn Lab Numbers Into Visuals
               </h2>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Example: Blood Sugar Analysis
               </p>
             </div>
-            
-            <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-8 border-2 border-indigo-200">
+
+            <div className="bg-secondary rounded-lg p-8 border border-border">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <div className="text-sm text-gray-600 mb-1">Glucose Level</div>
-                  <div className="text-4xl font-bold text-indigo-600">145 mg/dL</div>
+                  <div className="text-sm text-muted-foreground mb-1">Glucose Level</div>
+                  <div className="text-4xl font-bold text-primary">145 mg/dL</div>
                 </div>
-                <div className="text-6xl">🩸</div>
+                <Activity className="w-16 h-16 text-primary" />
               </div>
-              
+
               {/* Placeholder chart */}
-              <div className="h-48 bg-white rounded-xl flex items-center justify-center border border-gray-200">
+              <div className="h-48 bg-white rounded-lg flex items-center justify-center border border-border">
                 <div className="text-center">
-                  <div className="text-5xl mb-2">📊</div>
-                  <div className="text-gray-500 font-medium">Interactive Chart Preview</div>
+                  <ChartBar className="w-12 h-12 mx-auto mb-2 text-muted-foreground" />
+                  <div className="text-muted-foreground font-medium">Interactive Chart Preview</div>
                 </div>
               </div>
-              
-              <div className="mt-6 p-4 bg-white rounded-xl border border-indigo-200">
-                <p className="text-sm text-gray-700">
-                  <strong className="text-indigo-600">What this means:</strong> Your glucose is slightly elevated. Consider reducing sugar intake and increasing physical activity.
+
+              <div className="mt-6 p-4 bg-white rounded-lg border border-border">
+                <p className="text-sm text-foreground">
+                  <strong className="text-primary">What this means:</strong> Your glucose is slightly elevated. Consider reducing sugar intake and increasing physical activity.
                 </p>
               </div>
             </div>
@@ -321,17 +345,17 @@ export default function HomePage() {
       <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-[#1A1A1A] mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
               Why VitalView AI?
             </h2>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { icon: '💬', title: 'Clear Explanations', desc: 'No medical jargon, just simple language' },
-              { icon: '🎨', title: 'AI-Powered Visuals', desc: 'Automatic charts and graphics' },
-              { icon: '🔒', title: 'Private & Secure', desc: 'Your data stays on your device' },
-              { icon: '👨‍⚕️', title: 'Doctor-Friendly', desc: 'Share with your healthcare provider' }
+              { icon: MessageSquare, title: 'Clear Explanations', desc: 'No medical jargon, just simple language' },
+              { icon: ChartBar, title: 'AI-Powered Visuals', desc: 'Automatic charts and graphics' },
+              { icon: Shield, title: 'Private & Secure', desc: 'Your data stays on your device' },
+              { icon: Users, title: 'Doctor-Friendly', desc: 'Share with your healthcare provider' }
             ].map((feature, i) => (
               <motion.div
                 key={i}
@@ -339,13 +363,13 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 * i }}
                 viewport={{ once: true }}
-                className="bg-gradient-to-br from-white to-[#EEF8FF] border border-[#66D1C9]/30 rounded-3xl p-8 hover:shadow-xl transition-all"
+                className="bg-white border border-border rounded-lg p-8 hover:shadow-md transition-all"
               >
-                <div className="text-5xl mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">
+                <feature.icon className="w-12 h-12 mb-4 text-primary" />
+                <h3 className="text-xl font-bold text-foreground mb-2">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 text-sm">
+                <p className="text-muted-foreground text-sm">
                   {feature.desc}
                 </p>
               </motion.div>
@@ -355,13 +379,13 @@ export default function HomePage() {
       </section>
 
       {/* Quick Access Tools */}
-      <section className="py-20 px-6 bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50">
+      <section className="py-20 px-6 bg-secondary/30">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-[#1A1A1A] mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
               Quick Access Tools
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-muted-foreground">
               Essential healthcare tools at your fingertips
             </p>
           </div>
@@ -373,25 +397,20 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="group relative overflow-hidden bg-white backdrop-blur-xl border-2 border-teal-200 rounded-3xl p-8 hover:shadow-2xl hover:border-teal-400 transition-all cursor-pointer h-full"
+                className="group bg-white border-2 border-border rounded-lg p-8 hover:shadow-lg hover:border-primary/50 transition-all cursor-pointer h-full"
               >
-                <div className="absolute top-0 right-0 text-8xl opacity-5 group-hover:opacity-10 transition-opacity">
-                  🧭
+                <div className="w-16 h-16 bg-primary rounded flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
+                  <MapPin className="w-8 h-8 text-primary-foreground" />
                 </div>
-                <div className="relative z-10">
-                  <div className="w-16 h-16 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-2xl flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform">
-                    📍
-                  </div>
-                  <h3 className="text-2xl font-bold text-[#1A1A1A] mb-3">
-                    Find Care Near You
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed mb-4">
-                    Locate the closest hospitals, clinics, and pharmacies instantly using your location.
-                  </p>
-                  <div className="inline-flex items-center text-teal-600 font-semibold group-hover:gap-3 gap-2 transition-all">
-                    Get Started
-                    <span className="group-hover:translate-x-1 transition-transform">→</span>
-                  </div>
+                <h3 className="text-2xl font-bold text-foreground mb-3">
+                  Find Care Near You
+                </h3>
+                <p className="text-muted-foreground leading-relaxed mb-4">
+                  Locate the closest hospitals, clinics, and pharmacies instantly using your location.
+                </p>
+                <div className="inline-flex items-center text-primary font-semibold group-hover:gap-3 gap-2 transition-all">
+                  Get Started
+                  <span className="group-hover:translate-x-1 transition-transform">→</span>
                 </div>
               </motion.div>
             </Link>
@@ -403,25 +422,20 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
                 viewport={{ once: true }}
-                className="group relative overflow-hidden bg-white backdrop-blur-xl border-2 border-purple-200 rounded-3xl p-8 hover:shadow-2xl hover:border-purple-400 transition-all cursor-pointer h-full"
+                className="group bg-white border-2 border-border rounded-lg p-8 hover:shadow-lg hover:border-primary/50 transition-all cursor-pointer h-full"
               >
-                <div className="absolute top-0 right-0 text-8xl opacity-5 group-hover:opacity-10 transition-opacity">
-                  ⚖️
+                <div className="w-16 h-16 bg-primary rounded flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
+                  <Scale className="w-8 h-8 text-primary-foreground" />
                 </div>
-                <div className="relative z-10">
-                  <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform">
-                    📏
-                  </div>
-                  <h3 className="text-2xl font-bold text-[#1A1A1A] mb-3">
-                    BMI Calculator
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed mb-4">
-                    Calculate your Body Mass Index and understand your health metrics.
-                  </p>
-                  <div className="inline-flex items-center text-purple-600 font-semibold group-hover:gap-3 gap-2 transition-all">
-                    Calculate Now
-                    <span className="group-hover:translate-x-1 transition-transform">→</span>
-                  </div>
+                <h3 className="text-2xl font-bold text-foreground mb-3">
+                  BMI Calculator
+                </h3>
+                <p className="text-muted-foreground leading-relaxed mb-4">
+                  Calculate your Body Mass Index and understand your health metrics.
+                </p>
+                <div className="inline-flex items-center text-primary font-semibold group-hover:gap-3 gap-2 transition-all">
+                  Calculate Now
+                  <span className="group-hover:translate-x-1 transition-transform">→</span>
                 </div>
               </motion.div>
             </Link>
@@ -432,25 +446,20 @@ export default function HomePage() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
               viewport={{ once: true }}
-              className="group relative overflow-hidden bg-white backdrop-blur-xl border-2 border-gray-200 rounded-3xl p-8 opacity-60 h-full"
+              className="bg-white border-2 border-border rounded-lg p-8 opacity-60 h-full"
             >
-              <div className="absolute top-0 right-0 text-8xl opacity-5">
-                🔮
+              <div className="w-16 h-16 bg-muted rounded flex items-center justify-center mb-6">
+                <Pill className="w-8 h-8 text-muted-foreground" />
               </div>
-              <div className="relative z-10">
-                <div className="w-16 h-16 bg-gradient-to-br from-gray-400 to-gray-500 rounded-2xl flex items-center justify-center text-4xl mb-6">
-                  💊
-                </div>
-                <h3 className="text-2xl font-bold text-[#1A1A1A] mb-3">
-                  Medication Tracker
-                </h3>
-                <p className="text-gray-600 leading-relaxed mb-4">
-                  Track your prescriptions and get reminders. Coming soon!
-                </p>
-                <div className="inline-flex items-center text-gray-500 font-semibold gap-2">
-                  Coming Soon
-                  <span className="text-xl">⏳</span>
-                </div>
+              <h3 className="text-2xl font-bold text-foreground mb-3">
+                Medication Tracker
+              </h3>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Track your prescriptions and get reminders. Coming soon!
+              </p>
+              <div className="inline-flex items-center text-muted-foreground font-semibold gap-2">
+                Coming Soon
+                <Clock className="w-4 h-4" />
               </div>
             </motion.div>
           </div>
@@ -464,21 +473,21 @@ export default function HomePage() {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="relative overflow-hidden bg-gradient-to-br from-[#0B7BD6] to-[#66D1C9] rounded-3xl p-12 text-center text-white shadow-2xl"
+            className="bg-primary rounded-lg p-12 text-center text-primary-foreground shadow-lg"
           >
-            <div className="absolute top-0 right-0 text-9xl opacity-10">🩺</div>
-            <h2 className="text-4xl font-bold mb-4 relative z-10">
+            <Hospital className="w-16 h-16 mx-auto mb-6" />
+            <h2 className="text-4xl font-bold mb-4">
               Ready to Understand Your Medical Report?
             </h2>
-            <p className="text-xl mb-8 opacity-90 relative z-10">
+            <p className="text-xl mb-8 opacity-90">
               Get started in seconds. No signup required.
             </p>
             <Button
               onClick={() => fileInputRef.current?.click()}
               size="lg"
-              className="bg-white text-[#0B7BD6] hover:bg-gray-100 rounded-full px-12 py-7 text-lg font-semibold shadow-xl relative z-10"
+              className="bg-white text-primary hover:bg-secondary px-12"
             >
-              <span className="mr-2">📤</span>
+              <Upload className="w-4 h-4 mr-2" />
               Upload Your Report
             </Button>
           </motion.div>
@@ -486,25 +495,25 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-6 bg-white border-t border-gray-200">
+      <footer className="py-12 px-6 bg-white border-t border-border">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#0B7BD6] to-[#66D1C9] rounded-xl flex items-center justify-center text-white font-bold text-xl">
+              <div className="w-10 h-10 bg-primary rounded flex items-center justify-center text-primary-foreground font-bold text-lg">
                 V
               </div>
-              <span className="text-xl font-bold text-[#1A1A1A]">
+              <span className="text-xl font-bold text-foreground">
                 VitalView AI
               </span>
             </div>
-            <div className="flex gap-8 text-sm text-gray-600">
-              <Link href="#about" className="hover:text-[#0B7BD6] transition-colors">About</Link>
-              <Link href="#privacy" className="hover:text-[#0B7BD6] transition-colors">Privacy</Link>
-              <Link href="#terms" className="hover:text-[#0B7BD6] transition-colors">Terms</Link>
-              <Link href="#contact" className="hover:text-[#0B7BD6] transition-colors">Contact</Link>
+            <div className="flex gap-8 text-sm text-muted-foreground">
+              <Link href="#about" className="hover:text-primary transition-colors">About</Link>
+              <Link href="#privacy" className="hover:text-primary transition-colors">Privacy</Link>
+              <Link href="#terms" className="hover:text-primary transition-colors">Terms</Link>
+              <Link href="#contact" className="hover:text-primary transition-colors">Contact</Link>
             </div>
           </div>
-          <div className="mt-8 text-center text-sm text-gray-500">
+          <div className="mt-8 text-center text-sm text-muted-foreground">
             © 2025 VitalView AI. Transforming medical reports into clarity.
           </div>
         </div>
