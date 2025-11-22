@@ -92,21 +92,21 @@ In the Vercel dashboard, add these environment variables:
 ### **Required:**
 
 ```bash
-# Gemini AI (server-side)
-GEMINI_API_KEY=your_gemini_api_key_here
+# OpenAI API (for medical analysis)
+NEXT_PUBLIC_OPENAI_API_KEY=your_openai_api_key_here
 
 # Google Maps (client-side - visible in browser)
 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key_here
 
-# Google Places (server-side)
-GOOGLE_PLACES_API_KEY=your_google_places_api_key_here
+# Google Places (for nearby care feature)
+NEXT_PUBLIC_GOOGLE_PLACES_API_KEY=your_google_places_api_key_here
 ```
 
 ### **Optional (for full features):**
 
 ```bash
-# ElevenLabs TTS (server-side)
-ELEVENLABS_API_KEY=your_elevenlabs_api_key_here
+# ElevenLabs TTS (for text-to-speech in chatbot)
+NEXT_PUBLIC_ELEVENLABS_API_KEY=your_elevenlabs_api_key_here
 ```
 
 **How to add them:**
@@ -281,16 +281,20 @@ git push
 
 ## 🔐 Security Best Practices
 
-### **✅ What's Secure:**
-- ✅ Server-side API keys (GEMINI_API_KEY, ELEVENLABS_API_KEY)
-- ✅ HTTPS enabled by default
-- ✅ API routes protected
+### **⚠️ Client-side Keys (Visible in Browser):**
+All API keys use NEXT_PUBLIC_ prefix and are visible in browser:
+- `NEXT_PUBLIC_OPENAI_API_KEY`
+- `NEXT_PUBLIC_ELEVENLABS_API_KEY`
+- `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`
+- `NEXT_PUBLIC_GOOGLE_PLACES_API_KEY`
 
-### **⚠️ Client-side Keys:**
-- `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` - visible in browser
-- **Protect with:** API key restrictions in Google Cloud Console
-  - Restrict to your domain: `vitalview-ai.vercel.app`
-  - Limit to Maps/Places APIs only
+### **🔒 Protection Methods:**
+- ✅ HTTPS enabled by default
+- ✅ Restrict API keys in provider consoles:
+  - **OpenAI:** Set usage limits and monitoring
+  - **Google Cloud:** Restrict to your domain (e.g., `vitalview-ai.vercel.app`)
+  - **ElevenLabs:** Monitor usage and set limits
+- ✅ Use environment variables (never commit keys to Git)
 
 ---
 
