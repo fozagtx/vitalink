@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
 import { useDrChickStore } from '@/lib/drChickStore';
 import { Volume2, VolumeX, Pause, Loader2 } from 'lucide-react';
+import { useChat } from 'ai/react';
 
 // Lazy load 3D canvas to avoid SSR issues
 const DrChick3DCanvas = dynamic(() => import('./DrChick3DCanvas'), {
@@ -17,25 +18,8 @@ const DrChick3DCanvas = dynamic(() => import('./DrChick3DCanvas'), {
   ),
 });
 
-interface Message {
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: Date;
-  id: string;
-}
-
 export default function MedicalChatBot() {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: 'assistant',
-      content: 'Hey there! 👋 I\'m Dr. Chick, your VitalView AI health buddy. Ask me about symptoms, health tips, or wellness advice - I\'m here to help!\n\n💡 Just a heads up: I give general info, not medical diagnosis. For emergencies, call 911!',
-      timestamp: new Date(),
-      id: 'welcome-message'
-    }
-  ]);
-  const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const [muteAnimations, setMuteAnimations] = useState(false);
   const [hasGreeted, setHasGreeted] = useState(false);
   const [ttsEnabled, setTtsEnabled] = useState(true);
@@ -43,9 +27,44 @@ export default function MedicalChatBot() {
   const [audioLoading, setAudioLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  
+
   // Zustand store for 3D animation state
   const { animationState, setAnimationState, setMood, resetToIdle } = useDrChickStore();
+
+  // Use Vercel AI SDK's useChat hook with streaming
+  const { messages, input, handleInputChange, handleSubmit, isLoading, append } = useChat({
+    api: '/api/chat',
+    initialMessages: [
+      {
+        id: 'welcome-message',
+        role: 'assistant',
+        content: 'Hey there! 👋 I\'m Dr. Chick, your VitalView AI health buddy. Ask me about symptoms, health tips, or wellness advice - I\'m here to help!\n\n💡 Just a heads up: I give general info, not medical diagnosis. For emergencies, call 911!'
+      }
+    ],
+    onResponse: () => {
+      // Trigger response animation when AI starts responding
+      if (!muteAnimations) {
+        setAnimationState('responding');
+        setMood('Analyzing...', true);
+      }
+    },
+    onFinish: () => {
+      // Reset animation when response is complete
+      if (!muteAnimations) {
+        setMood('Here\'s what I found!', true);
+        setTimeout(() => setMood('', false), 2000);
+        setTimeout(() => resetToIdle(), 3000);
+      }
+    },
+    onError: (error) => {
+      console.error('Chat error:', error);
+      if (!muteAnimations) {
+        setAnimationState('idle');
+        setMood('Oops! Something went wrong', true);
+        setTimeout(() => setMood('', false), 2000);
+      }
+    }
+  });
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -68,20 +87,9 @@ export default function MedicalChatBot() {
     }
   }, [isOpen, hasGreeted, muteAnimations, setAnimationState, setMood, resetToIdle]);
 
-  const sendMessage = async () => {
-    if (!input.trim() || isLoading) return;
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-    const userMessage: Message = {
-      role: 'user',
-      content: input,
-      timestamp: new Date(),
-      id: `user-${Date.now()}`
-    };
-
-    setMessages(prev => [...prev, userMessage]);
-    setInput('');
-    setIsLoading(true);
-    
     // Trigger listen animation on new message
     if (!muteAnimations) {
       setAnimationState('listen');
@@ -92,70 +100,7 @@ export default function MedicalChatBot() {
       }, 800);
     }
 
-    try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: input })
-      });
-
-      const data = await response.json();
-
-      const assistantMessage: Message = {
-        role: 'assistant',
-        content: data.response || 'I apologize, but I encountered an error. Please try again.',
-        timestamp: new Date(),
-        id: `assistant-${Date.now()}`
-      };
-
-      setMessages(prev => [...prev, assistantMessage]);
-      
-      // Analyze response and set chick state
-      if (!muteAnimations) {
-        analyzeResponseForMetrics(data.response);
-        setMood('Here\'s what I found!', true);
-        setTimeout(() => setMood('', false), 2000);
-      }
-    } catch (error) {
-      console.error('Chat error:', error);
-      const errorMessage: Message = {
-        role: 'assistant',
-        content: 'I apologize, but I\'m having trouble connecting right now. Please try again later.',
-        timestamp: new Date(),
-        id: `error-${Date.now()}`
-      };
-      setMessages(prev => [...prev, errorMessage]);
-      if (!muteAnimations) {
-        setAnimationState('idle');
-        setMood('Oops! Something went wrong', true);
-        setTimeout(() => setMood('', false), 2000);
-      }
-    } finally {
-      setIsLoading(false);
-      if (!muteAnimations) {
-        setTimeout(() => resetToIdle(), 3000);
-      }
-    }
-  };
-
-  // Analyze AI response for health keywords
-  const analyzeResponseForMetrics = (response: string) => {
-    const lowerResponse = response.toLowerCase();
-    
-    // Check for health concerns (keep idle for now, mood bubble shows the info)
-    if (lowerResponse.includes('emergency') || lowerResponse.includes('urgent') || lowerResponse.includes('serious')) {
-      // Alert state handled by mood
-    } else if (lowerResponse.includes('concern') || lowerResponse.includes('warning')) {
-      // Concern handled by mood
-    }
-    // Return to idle after response
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
-    }
+    handleSubmit(e);
   };
 
   // Track last TTS request time for rate limiting
@@ -167,7 +112,7 @@ export default function MedicalChatBot() {
       console.log('TTS disabled by user');
       return;
     }
-    
+
     console.log('🎤 Starting TTS for message:', messageId);
 
     // Stop any ongoing speech
@@ -249,10 +194,10 @@ export default function MedicalChatBot() {
           error: errorData,
           textPreview: cleanText.substring(0, 50)
         });
-        
+
         setSpeakingMessageId(null);
         setAudioLoading(false);
-        
+
         // Show user-friendly error message
         if (!muteAnimations) {
           resetToIdle();
@@ -339,7 +284,7 @@ export default function MedicalChatBot() {
 
       // Wait a moment for audio to load, then play
       await new Promise(resolve => setTimeout(resolve, 100));
-      
+
       console.log('🎬 Attempting to play audio...');
       await audio.play();
       console.log('✅ Audio.play() succeeded');
@@ -367,10 +312,6 @@ export default function MedicalChatBot() {
       setMood('', false);
     }
   };
-
-  // Note: Auto-speak disabled to comply with browser autoplay policies
-  // Users can click the speaker icon to play audio manually
-  // This prevents "NotAllowedError: play() failed" issues
 
   // Cleanup on unmount
   useEffect(() => {
@@ -438,7 +379,7 @@ export default function MedicalChatBot() {
             {/* Header - Polished */}
             <div className="bg-gradient-to-r from-[#0B7BD6] via-[#3BA5D9] to-[#66D1C9] p-5 flex items-center justify-between shadow-lg">
               <div className="flex items-center gap-4">
-                <motion.div 
+                <motion.div
                   className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-3xl shadow-md ring-2 ring-white/30"
                   animate={{ rotate: [0, 5, -5, 0] }}
                   transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
@@ -488,9 +429,9 @@ export default function MedicalChatBot() {
                     moodText={useDrChickStore.getState().moodText}
                   />
                 </div>
-                
+
                 {/* Dr. Chick Status Card - Enhanced */}
-                <motion.div 
+                <motion.div
                   className="bg-gradient-to-br from-white to-[#F0F9FF] rounded-xl p-4 border border-[#0B7BD6]/20 shadow-sm"
                   animate={{ scale: [1, 1.02, 1] }}
                   transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
@@ -498,7 +439,7 @@ export default function MedicalChatBot() {
                   <p className="text-xs text-center text-gray-700 font-medium">
                     <span className="font-bold text-[#0B7BD6]">Dr. Chick</span> is here!
                   </p>
-                  <motion.p 
+                  <motion.p
                     key={animationState}
                     initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -514,14 +455,14 @@ export default function MedicalChatBot() {
 
               {/* Messages - Right Side */}
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                {messages.map((message, index) => (
+                {messages.map((message) => (
                   <motion.div
-                    key={index}
+                    key={message.id}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
-    <div className="flex items-start gap-2 max-w-[90%]">
+                    <div className="flex items-start gap-2 max-w-[90%]">
                       <div
                         className={`flex-1 rounded-2xl px-4 py-3 ${
                           message.role === 'user'
@@ -535,7 +476,7 @@ export default function MedicalChatBot() {
                             message.role === 'user' ? 'text-white/70' : 'text-gray-400'
                           }`}
                         >
-                          {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          {new Date(message.createdAt || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </p>
                       </div>
                       {message.role === 'assistant' && ttsEnabled && (
@@ -598,24 +539,23 @@ export default function MedicalChatBot() {
 
             {/* Input */}
             <div className="p-4 bg-white border-t border-gray-200">
-              <div className="flex gap-2">
+              <form onSubmit={onSubmit} className="flex gap-2">
                 <input
                   type="text"
                   value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyPress={handleKeyPress}
+                  onChange={handleInputChange}
                   placeholder="Describe your symptoms..."
                   className="flex-1 px-4 py-3 rounded-full border-2 border-gray-200 focus:border-[#0B7BD6] focus:outline-none text-sm"
                   disabled={isLoading}
                 />
                 <Button
-                  onClick={sendMessage}
+                  type="submit"
                   disabled={!input.trim() || isLoading}
                   className="bg-gradient-to-r from-[#0B7BD6] to-[#66D1C9] hover:opacity-90 rounded-full w-12 h-12 flex items-center justify-center text-xl disabled:opacity-50"
                 >
                   ➤
                 </Button>
-              </div>
+              </form>
               <p className="text-xs text-gray-400 mt-2 text-center">
                 AI responses are for informational purposes only
               </p>
