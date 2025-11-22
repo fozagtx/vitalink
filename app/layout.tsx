@@ -7,7 +7,7 @@ import MedicalChatBot from '@/components/MedicalChatBot'
 // const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Mentoxy - Understand Your Medical Reports',
+  title: 'VitalView AI - Understand Your Medical Reports',
   description: 'AI-powered medical report analysis with clear explanations and auto-generated health visuals. Transform complex lab results into insights you can understand.',
 }
 

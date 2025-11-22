@@ -80,7 +80,7 @@ export default function HomePage() {
                 <Brain className="w-5 h-5 text-white" />
               </div>
               <span className="text-2xl font-serif font-bold text-[#1A1A1A]">
-                Mentoxy
+                VitalView AI
               </span>
             </div>
 
@@ -90,19 +90,22 @@ export default function HomePage() {
                 Home
               </Link>
               <Link href="#about" className="text-[14px] font-medium text-[#1A1A1A] hover:text-[#555555] transition-colors">
-                About Us
+                About
               </Link>
-              <Link href="#benefits" className="text-[14px] font-medium text-[#1A1A1A] hover:text-[#555555] transition-colors">
-                Benefit
+              <Link href="/nearby-care" className="text-[14px] font-medium text-[#1A1A1A] hover:text-[#555555] transition-colors">
+                Find Care
               </Link>
-              <Link href="#community" className="text-[14px] font-medium text-[#1A1A1A] hover:text-[#555555] transition-colors">
-                Community
+              <Link href="/bmi" className="text-[14px] font-medium text-[#1A1A1A] hover:text-[#555555] transition-colors">
+                BMI Calculator
+              </Link>
+              <Link href="#upload" className="text-[14px] font-medium text-[#1A1A1A] hover:text-[#555555] transition-colors">
+                Upload Report
               </Link>
             </div>
 
-            {/* Contact Button - Right */}
+            {/* Get Started Button - Right */}
             <Button className="bg-[#1A1A1A] hover:bg-[#2A2A2A] text-white rounded-full px-6 py-2.5 text-[14px] font-medium transition-all">
-              Contact Us <ArrowRight className="w-4 h-4 ml-2" />
+              Get Started
             </Button>
           </div>
         </div>
@@ -441,7 +444,7 @@ export default function HomePage() {
             className="text-center mb-16"
           >
             <h2 className="text-[42px] font-serif font-bold text-[#1A1A1A] mb-6">
-              Why Mentoxy?
+              Why VitalView AI?
             </h2>
             <p className="text-[18px] text-[#555555] max-w-3xl mx-auto leading-relaxed">
               Transform complex medical documents into clear, visual insights. Our AI-powered platform
@@ -552,7 +555,7 @@ export default function HomePage() {
                 <Brain className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-serif font-bold text-[#1A1A1A]">
-                Mentoxy
+                VitalView AI
               </span>
             </div>
             <div className="flex gap-8 text-[14px] text-[#555555]">
@@ -563,7 +566,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="mt-8 text-center text-[13px] text-[#555555]">
-            © 2025 Mentoxy. Transforming medical reports into clarity.
+            © 2025 VitalView AI. Transforming medical reports into clarity.
           </div>
         </div>
       </footer>
