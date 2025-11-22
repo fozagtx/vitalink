@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const apiKey = process.env.GOOGLE_PLACES_API_KEY;
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;
 
     if (!apiKey) {
       return NextResponse.json(

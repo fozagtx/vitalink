@@ -36,7 +36,7 @@ Create a `.env.local` file in the project root:
 
 ```bash
 # Google Places API Key (for searching nearby places)
-GOOGLE_PLACES_API_KEY=YOUR_API_KEY_HERE
+NEXT_PUBLIC_GOOGLE_PLACES_API_KEY=YOUR_API_KEY_HERE
 
 # Google Maps API Key (for map display - can be the same key)
 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=YOUR_API_KEY_HERE
