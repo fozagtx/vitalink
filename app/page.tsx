@@ -1,14 +1,72 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight, Brain, Heart, Activity } from 'lucide-react';
+import {
+  ArrowRight,
+  Brain,
+  FileText,
+  Upload,
+  Search,
+  ChartBar,
+  Activity,
+  TrendingUp,
+  AlertCircle,
+  Clock,
+  MapPin,
+  Scale
+} from 'lucide-react';
 import Image from 'next/image';
 
 export default function HomePage() {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
+
+  const handleFile = (selectedFile: File) => {
+    if (selectedFile.type !== 'application/pdf') {
+      setError('Please upload a PDF file');
+      return;
+    }
+    setFile(selectedFile);
+    setError(null);
+  };
+
+  const handleAnalyze = async () => {
+    if (!file) return;
+    setLoading(true);
+    setError(null);
+
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const base64 = btoa(
+        new Uint8Array(arrayBuffer).reduce(
+          (data, byte) => data + String.fromCharCode(byte),
+          ''
+        )
+      );
+
+      const documentId = `doc-${Date.now()}`;
+      const tempData = {
+        fileName: file.name,
+        fileData: base64,
+        fileSize: file.size,
+        documentId: documentId
+      };
+
+      localStorage.setItem(`document-${documentId}`, JSON.stringify(tempData));
+      router.push(`/results/${documentId}`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to process PDF');
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#F6F6F4]">
@@ -32,19 +90,22 @@ export default function HomePage() {
                 Home
               </Link>
               <Link href="#about" className="text-[14px] font-medium text-[#1A1A1A] hover:text-[#555555] transition-colors">
-                About Us
+                About
               </Link>
-              <Link href="#benefits" className="text-[14px] font-medium text-[#1A1A1A] hover:text-[#555555] transition-colors">
-                Benefit
+              <Link href="/nearby-care" className="text-[14px] font-medium text-[#1A1A1A] hover:text-[#555555] transition-colors">
+                Find Care
               </Link>
-              <Link href="#community" className="text-[14px] font-medium text-[#1A1A1A] hover:text-[#555555] transition-colors">
-                Community
+              <Link href="/bmi" className="text-[14px] font-medium text-[#1A1A1A] hover:text-[#555555] transition-colors">
+                BMI Calculator
+              </Link>
+              <Link href="#upload" className="text-[14px] font-medium text-[#1A1A1A] hover:text-[#555555] transition-colors">
+                Upload Report
               </Link>
             </div>
 
-            {/* Contact Button - Right */}
+            {/* Get Started Button - Right */}
             <Button className="bg-[#1A1A1A] hover:bg-[#2A2A2A] text-white rounded-full px-6 py-2.5 text-[14px] font-medium transition-all">
-              Contact Us <ArrowRight className="w-4 h-4 ml-2" />
+              Get Started <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </div>
         </div>
@@ -55,8 +116,8 @@ export default function HomePage() {
         {/* Subtle Background Texture */}
         <div className="absolute inset-0 opacity-20">
           <Image
-            src="https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=1920&q=80"
-            alt="Calm water texture"
+            src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1920&q=80"
+            alt="Medical background"
             fill
             className="object-cover"
             priority
@@ -73,24 +134,67 @@ export default function HomePage() {
           >
             {/* Main Headline */}
             <h1 className="text-[54px] leading-tight font-serif font-bold text-[#1A1A1A] mb-6">
-              Your Path to Mental Wellness
+              Understand Your Health Reports
               <br />
-              Starts Here
+              in Seconds
             </h1>
 
             {/* Supporting Text */}
             <p className="text-[18px] text-[#555555] mb-12 max-w-2xl mx-auto leading-relaxed">
-              Track your emotional well-being, understand your sleep patterns, and gain insights
-              into your mental health with science-backed analytics and personalized guidance.
+              AI-powered medical report analysis with clear explanations and auto-generated health visuals.
+              Transform complex lab results into insights you can actually understand.
             </p>
 
-            {/* CTA Button */}
-            <Button
-              size="lg"
-              className="bg-[#1A1A1A] hover:bg-[#2A2A2A] text-white rounded-full px-10 py-6 text-[16px] font-medium shadow-lg hover:shadow-xl transition-all"
-            >
-              Start Your Journey <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
+            {/* Upload Section */}
+            <div className="max-w-xl mx-auto mb-8">
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className="relative cursor-pointer group"
+              >
+                <div className="glass-card rounded-[20px] p-12 hover:shadow-lg transition-all border-2 border-dashed border-white/50 hover:border-[#1A1A1A]/30">
+                  <FileText className="w-16 h-16 mx-auto mb-4 text-[#1A1A1A]" />
+                  <p className="text-lg font-serif font-semibold text-[#1A1A1A] mb-2">
+                    {file ? file.name : 'Upload Medical Report'}
+                  </p>
+                  <p className="text-sm text-[#555555]">
+                    PDF format • Blood tests, prescriptions, lab results
+                  </p>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".pdf"
+                    onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
+                    className="hidden"
+                  />
+                </div>
+              </div>
+
+              {error && (
+                <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-[12px] text-red-600 text-sm flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4" />
+                  {error}
+                </div>
+              )}
+
+              <Button
+                onClick={handleAnalyze}
+                disabled={!file || loading}
+                size="lg"
+                className="mt-6 bg-[#1A1A1A] hover:bg-[#2A2A2A] text-white rounded-full px-10 py-6 text-[16px] font-medium shadow-lg hover:shadow-xl transition-all disabled:opacity-50"
+              >
+                {loading ? (
+                  <>
+                    <Clock className="w-5 h-5 mr-2 animate-spin" />
+                    Analyzing Your Report...
+                  </>
+                ) : (
+                  <>
+                    <Search className="w-5 h-5 mr-2" />
+                    Analyze Now
+                  </>
+                )}
+              </Button>
+            </div>
           </motion.div>
         </div>
       </section>
@@ -99,7 +203,7 @@ export default function HomePage() {
       <section className="py-16 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-3 gap-8">
-            {/* Sleep Card */}
+            {/* Blood Sugar Card */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -115,8 +219,8 @@ export default function HomePage() {
             >
               {/* Background Image */}
               <Image
-                src="https://images.unsplash.com/photo-1511988617509-a57c8a288659?w=800&q=80"
-                alt="Person sleeping peacefully"
+                src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80"
+                alt="Blood test analysis"
                 fill
                 className="object-cover brightness-90"
               />
@@ -127,8 +231,8 @@ export default function HomePage() {
               {/* Glass Card Content */}
               <div className="absolute inset-0 p-6 flex flex-col justify-between glass-card">
                 <div>
-                  <h3 className="text-[28px] font-serif font-bold text-white mb-2">Sleep</h3>
-                  <p className="text-white/80 text-[14px]">Quality Rest Analysis</p>
+                  <h3 className="text-[28px] font-serif font-bold text-white mb-2">Blood Sugar</h3>
+                  <p className="text-white/80 text-[14px]">Glucose Monitoring</p>
                 </div>
 
                 {/* Chart Visual */}
@@ -161,7 +265,7 @@ export default function HomePage() {
 
                 {/* Caption */}
                 <p className="text-white/90 text-[13px] leading-relaxed">
-                  Average 7.2 hours per night with 85% deep sleep quality
+                  Track blood sugar levels and identify patterns over time
                 </p>
               </div>
             </motion.div>
@@ -182,8 +286,8 @@ export default function HomePage() {
             >
               {/* Background Image */}
               <Image
-                src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&q=80"
-                alt="Wellness and health"
+                src="https://images.unsplash.com/photo-1579154204601-01588f351e67?w=800&q=80"
+                alt="Lab test results"
                 fill
                 className="object-cover brightness-90"
               />
@@ -195,7 +299,7 @@ export default function HomePage() {
               <div className="absolute inset-0 p-6 flex flex-col justify-between glass-card">
                 <div>
                   <h3 className="text-[28px] font-serif font-bold text-white mb-2">Biomarkers</h3>
-                  <p className="text-white/80 text-[14px]">Health Indicators</p>
+                  <p className="text-white/80 text-[14px]">Lab Test Analysis</p>
                 </div>
 
                 {/* Bar Chart Visual */}
@@ -212,12 +316,12 @@ export default function HomePage() {
 
                 {/* Caption */}
                 <p className="text-white/90 text-[13px] leading-relaxed">
-                  All markers within optimal range. Cortisol trending positive.
+                  Visualize cholesterol, vitamins, and other key health markers
                 </p>
               </div>
             </motion.div>
 
-            {/* HRV Card */}
+            {/* Vital Signs Card */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -233,8 +337,8 @@ export default function HomePage() {
             >
               {/* Background Image */}
               <Image
-                src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=800&q=80"
-                alt="Meditation and mindfulness"
+                src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=800&q=80"
+                alt="Health monitoring"
                 fill
                 className="object-cover brightness-90"
               />
@@ -245,8 +349,8 @@ export default function HomePage() {
               {/* Glass Card Content */}
               <div className="absolute inset-0 p-6 flex flex-col justify-between glass-card">
                 <div>
-                  <h3 className="text-[28px] font-serif font-bold text-white mb-2">HRV</h3>
-                  <p className="text-white/80 text-[14px]">Heart Rate Variability</p>
+                  <h3 className="text-[28px] font-serif font-bold text-white mb-2">Vital Signs</h3>
+                  <p className="text-white/80 text-[14px]">Health Monitoring</p>
                 </div>
 
                 {/* Wave Chart Visual */}
@@ -281,7 +385,7 @@ export default function HomePage() {
 
                 {/* Caption */}
                 <p className="text-white/90 text-[13px] leading-relaxed">
-                  Optimal variability at 68ms. Stress resilience improving.
+                  Monitor heart rate, blood pressure, and respiratory health
                 </p>
               </div>
             </motion.div>
@@ -289,31 +393,70 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* About Section */}
+      {/* How It Works */}
+      <section className="py-20 px-6 bg-white/40">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-[42px] font-serif font-bold text-[#1A1A1A] mb-4">
+              How It Works
+            </h2>
+            <p className="text-[18px] text-[#555555]">
+              Three simple steps to clarity
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { icon: Upload, title: 'Upload Report', desc: 'Drop your PDF medical report, lab results, or blood test' },
+              { icon: Search, title: 'AI Analyzes', desc: 'Our advanced AI reads and interprets your results in seconds' },
+              { icon: ChartBar, title: 'Get Insights + Visuals', desc: 'Receive clear explanations with interactive charts and graphics' }
+            ].map((step, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 * i }}
+                viewport={{ once: true }}
+                className="glass-card rounded-[20px] p-8 hover:shadow-lg transition-all"
+              >
+                <div className="w-14 h-14 bg-[#1A1A1A] rounded-full flex items-center justify-center mb-6">
+                  <step.icon className="w-7 h-7 text-white" />
+                </div>
+                <h3 className="text-[22px] font-serif font-bold text-[#1A1A1A] mb-3">
+                  {i + 1}. {step.title}
+                </h3>
+                <p className="text-[15px] text-[#555555] leading-relaxed">
+                  {step.desc}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Why Mentoxy */}
       <section id="about" className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center"
+            className="text-center mb-16"
           >
             <h2 className="text-[42px] font-serif font-bold text-[#1A1A1A] mb-6">
-              Science-Backed Mental Wellness
+              Why Mentoxy?
             </h2>
             <p className="text-[18px] text-[#555555] max-w-3xl mx-auto leading-relaxed">
-              Mentoxy combines advanced biometric tracking with evidence-based psychology
-              to provide personalized insights into your mental and emotional well-being.
-              Our platform helps you understand the connection between your daily habits,
-              physiological markers, and mental health.
+              Transform complex medical documents into clear, visual insights. Our AI-powered platform
+              helps you understand your health data with science-backed analysis and easy-to-read visualizations.
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8 mt-16">
+          <div className="grid md:grid-cols-3 gap-8">
             {[
-              { icon: Brain, title: 'Cognitive Analytics', desc: 'Track mental clarity, focus, and cognitive performance over time' },
-              { icon: Heart, title: 'Emotional Balance', desc: 'Monitor mood patterns and emotional regulation metrics' },
-              { icon: Activity, title: 'Physical Wellness', desc: 'Connect physical health data with mental well-being' }
+              { icon: FileText, title: 'Clear Explanations', desc: 'No medical jargon, just simple language you can understand' },
+              { icon: Activity, title: 'Visual Analytics', desc: 'Auto-generated charts and graphs for every metric' },
+              { icon: TrendingUp, title: 'Track Progress', desc: 'Monitor your health trends and improvements over time' }
             ].map((item, i) => (
               <motion.div
                 key={i}
@@ -338,6 +481,71 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Quick Access Tools */}
+      <section className="py-20 px-6 bg-white/40">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-[42px] font-serif font-bold text-[#1A1A1A] mb-4">
+              Quick Access Tools
+            </h2>
+            <p className="text-[18px] text-[#555555]">
+              Essential healthcare tools at your fingertips
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Find Care Near You Card */}
+            <Link href="/nearby-care">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="group glass-card rounded-[20px] p-8 hover:shadow-lg transition-all cursor-pointer h-full"
+              >
+                <div className="w-16 h-16 bg-[#1A1A1A] rounded-full flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
+                  <MapPin className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-[28px] font-serif font-bold text-[#1A1A1A] mb-3">
+                  Find Care Near You
+                </h3>
+                <p className="text-[#555555] leading-relaxed mb-4">
+                  Locate the closest hospitals, clinics, and pharmacies instantly using your location.
+                </p>
+                <div className="inline-flex items-center text-[#1A1A1A] font-semibold group-hover:gap-3 gap-2 transition-all">
+                  Get Started
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </motion.div>
+            </Link>
+
+            {/* BMI Calculator Card */}
+            <Link href="/bmi">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                viewport={{ once: true }}
+                className="group glass-card rounded-[20px] p-8 hover:shadow-lg transition-all cursor-pointer h-full"
+              >
+                <div className="w-16 h-16 bg-[#1A1A1A] rounded-full flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
+                  <Scale className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-[28px] font-serif font-bold text-[#1A1A1A] mb-3">
+                  BMI Calculator
+                </h3>
+                <p className="text-[#555555] leading-relaxed mb-4">
+                  Calculate your Body Mass Index and understand your health metrics.
+                </p>
+                <div className="inline-flex items-center text-[#1A1A1A] font-semibold group-hover:gap-3 gap-2 transition-all">
+                  Calculate Now
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </motion.div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="py-12 px-6 border-t border-white/30">
         <div className="max-w-7xl mx-auto">
@@ -358,7 +566,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="mt-8 text-center text-[13px] text-[#555555]">
-            © 2025 Mentoxy. Your trusted companion for mental wellness.
+            © 2025 Mentoxy. Transforming medical reports into clarity.
           </div>
         </div>
       </footer>
