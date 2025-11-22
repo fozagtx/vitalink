@@ -3,7 +3,7 @@ import { createServerSupabaseClient } from '@/lib/supabase/server';
 import OpenAI from 'openai';
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || '',
+  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY || '',
 });
 
 export async function POST(request: NextRequest) {
@@ -106,7 +106,7 @@ export async function GET(request: NextRequest) {
 
 // Helper function to generate document summary with OpenAI
 async function generateSummaryWithOpenAI(extractedText: string, fileName: string): Promise<string> {
-  if (!process.env.OPENAI_API_KEY) {
+  if (!process.env.NEXT_PUBLIC_OPENAI_API_KEY) {
     return 'AI summary not available - OpenAI API key not configured.';
   }
 
@@ -227,8 +227,8 @@ async function generateFlowchartWithOpenAI(
   extractedText: string
 ): Promise<any> {
   // If no OpenAI API key, fallback to static flowchart
-  if (!process.env.OPENAI_API_KEY) {
-    console.warn('[v0] OPENAI_API_KEY not set, using fallback flowchart');
+  if (!process.env.NEXT_PUBLIC_OPENAI_API_KEY) {
+    console.warn('[v0] NEXT_PUBLIC_OPENAI_API_KEY not set, using fallback flowchart');
     return generateFallbackFlowchart();
   }
 
