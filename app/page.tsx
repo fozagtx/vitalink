@@ -90,22 +90,19 @@ export default function HomePage() {
                 Home
               </Link>
               <Link href="#about" className="text-[14px] font-medium text-[#1A1A1A] hover:text-[#555555] transition-colors">
-                About
+                About Us
               </Link>
-              <Link href="/nearby-care" className="text-[14px] font-medium text-[#1A1A1A] hover:text-[#555555] transition-colors">
-                Find Care
+              <Link href="#benefits" className="text-[14px] font-medium text-[#1A1A1A] hover:text-[#555555] transition-colors">
+                Benefit
               </Link>
-              <Link href="/bmi" className="text-[14px] font-medium text-[#1A1A1A] hover:text-[#555555] transition-colors">
-                BMI Calculator
-              </Link>
-              <Link href="#upload" className="text-[14px] font-medium text-[#1A1A1A] hover:text-[#555555] transition-colors">
-                Upload Report
+              <Link href="#community" className="text-[14px] font-medium text-[#1A1A1A] hover:text-[#555555] transition-colors">
+                Community
               </Link>
             </div>
 
-            {/* Get Started Button - Right */}
+            {/* Contact Button - Right */}
             <Button className="bg-[#1A1A1A] hover:bg-[#2A2A2A] text-white rounded-full px-6 py-2.5 text-[14px] font-medium transition-all">
-              Get Started <ArrowRight className="w-4 h-4 ml-2" />
+              Contact Us <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </div>
         </div>
