@@ -6,7 +6,7 @@
 - [ ] `.env.example` contains all required variables
 - [ ] Local build works: `npm run build`
 - [ ] All features tested locally
-- [ ] API keys are ready (Gemini, Google Maps, ElevenLabs)
+- [ ] API keys are ready (OpenAI, Google Maps/Places, ElevenLabs)
 
 ## Vercel Setup
 
@@ -18,12 +18,12 @@
 ## Environment Variables (Add in Vercel Dashboard)
 
 ### Required:
-- [ ] `GEMINI_API_KEY` - Gemini AI for medical analysis
-- [ ] `GOOGLE_PLACES_API_KEY` - Google Places for nearby search
+- [ ] `NEXT_PUBLIC_OPENAI_API_KEY` - OpenAI for medical analysis
+- [ ] `NEXT_PUBLIC_GOOGLE_PLACES_API_KEY` - Google Places for nearby search
 - [ ] `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` - Google Maps display
 
 ### Optional:
-- [ ] `ELEVENLABS_API_KEY` - Voice synthesis for chatbot
+- [ ] `NEXT_PUBLIC_ELEVENLABS_API_KEY` - Voice synthesis for chatbot
 
 ## Post-Deployment Testing
 
@@ -66,8 +66,9 @@
 
 ## Security
 
-- [ ] Server-side API keys not exposed
-- [ ] Google Maps API key restricted to domain
+- [ ] All API keys use NEXT_PUBLIC_ prefix (visible in browser)
+- [ ] API keys restricted in provider consoles (OpenAI, Google Cloud, ElevenLabs)
+- [ ] Google Maps/Places API keys restricted to domain
 - [ ] CORS configured correctly
 - [ ] HTTPS enabled (automatic on Vercel)
 

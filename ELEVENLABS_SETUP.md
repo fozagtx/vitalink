@@ -47,7 +47,7 @@ Dr. Chick chatbot now uses **ElevenLabs AI** for ultra-realistic, natural-soundi
 Open `.env.local` and add:
 
 ```bash
-ELEVENLABS_API_KEY=sk_your_actual_key_here
+NEXT_PUBLIC_ELEVENLABS_API_KEY=sk_your_actual_key_here
 ```
 
 **Important:** 
@@ -235,7 +235,7 @@ Dr. Chick: "High blood pressure, or hypertension, is when..."
 cat .env.local | grep ELEVENLABS
 
 # Should show:
-# ELEVENLABS_API_KEY=sk_...
+# NEXT_PUBLIC_ELEVENLABS_API_KEY=sk_...
 
 # Restart server
 npm run dev
@@ -397,7 +397,7 @@ You now have **professional, AI-powered text-to-speech** in Dr. Chick!
 # 1. Get API key from elevenlabs.io
 
 # 2. Add to .env.local
-echo "ELEVENLABS_API_KEY=sk_your_key" >> .env.local
+echo "NEXT_PUBLIC_ELEVENLABS_API_KEY=sk_your_key" >> .env.local
 
 # 3. Restart server
 npm run dev
