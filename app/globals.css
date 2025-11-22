@@ -1,42 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(0.99 0 0);
-  --foreground: oklch(0.15 0.01 250);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.15 0.01 250);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0.01 250);
-  --primary: oklch(0.35 0.08 250);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.95 0.005 250);
-  --secondary-foreground: oklch(0.25 0.01 250);
-  --muted: oklch(0.96 0.003 250);
-  --muted-foreground: oklch(0.46 0.01 250);
-  --accent: oklch(0.96 0.003 250);
-  --accent-foreground: oklch(0.25 0.01 250);
+  /* New Design System Colors */
+  --background: #F6F6F4; /* Off-white / Light Gray Background */
+  --foreground: #1A1A1A; /* Dark Charcoal Text */
+  --card: rgba(255, 255, 255, 0.45); /* Soft White Gradient Overlay */
+  --card-foreground: #1A1A1A;
+  --popover: #FFFFFF;
+  --popover-foreground: #1A1A1A;
+  --primary: #1A1A1A; /* CTA Button Background */
+  --primary-foreground: #FFFFFF; /* CTA Text */
+  --secondary: #555555; /* Secondary Muted Gray Text */
+  --secondary-foreground: #FFFFFF;
+  --muted: rgba(230, 237, 230, 0.30);
+  --muted-foreground: #555555;
+  --accent: #A9D2FF; /* Soft Blue */
+  --accent-foreground: #1A1A1A;
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.90 0.003 250);
-  --input: oklch(0.90 0.003 250);
-  --ring: oklch(0.35 0.08 250);
-  --chart-1: oklch(0.45 0.12 250);
-  --chart-2: oklch(0.55 0.10 210);
-  --chart-3: oklch(0.50 0.08 180);
-  --chart-4: oklch(0.60 0.09 270);
-  --chart-5: oklch(0.48 0.11 230);
-  --radius: 0.375rem;
-  --sidebar: oklch(0.99 0 0);
-  --sidebar-foreground: oklch(0.15 0.01 250);
-  --sidebar-primary: oklch(0.35 0.08 250);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.96 0.003 250);
-  --sidebar-accent-foreground: oklch(0.25 0.01 250);
-  --sidebar-border: oklch(0.90 0.003 250);
-  --sidebar-ring: oklch(0.35 0.08 250);
+  --border: rgba(255, 255, 255, 0.3); /* Glass Card Border */
+  --input: rgba(255, 255, 255, 0.5);
+  --ring: #1A1A1A;
+  --chart-1: #A9D2FF; /* Soft blues */
+  --chart-2: #7CB8F6;
+  --chart-3: #4F8EF0;
+  --chart-4: #A9D2FF;
+  --chart-5: #7CB8F6;
+  --radius: 1.25rem; /* 20px for rounded corners */
+  --sidebar: #F6F6F4;
+  --sidebar-foreground: #1A1A1A;
+  --sidebar-primary: #1A1A1A;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: rgba(255, 255, 255, 0.45);
+  --sidebar-accent-foreground: #1A1A1A;
+  --sidebar-border: rgba(255, 255, 255, 0.3);
+  --sidebar-ring: #1A1A1A;
 }
 
 .dark {
@@ -75,7 +77,8 @@
 }
 
 @theme inline {
-  --font-sans: 'Geist', 'Geist Fallback';
+  --font-sans: 'Inter', 'Geist', 'Geist Fallback', sans-serif;
+  --font-serif: 'Playfair Display', serif;
   --font-mono: 'Geist Mono', 'Geist Mono Fallback';
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -130,6 +133,23 @@
   }
   .delay-200 {
     animation-delay: 0.2s;
+  }
+
+  /* Glass-morphism effect */
+  .glass-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.45), rgba(230, 237, 230, 0.30));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
+  }
+
+  .glass-card-overlay {
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.45), rgba(230, 237, 230, 0.30));
+  }
+
+  .font-serif {
+    font-family: 'Playfair Display', serif;
   }
 }
 
