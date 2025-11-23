@@ -1,9 +1,14 @@
-import { openai } from '@ai-sdk/openai';
+import { createOpenAI } from '@ai-sdk/openai';
 import { streamText, tool } from 'ai';
 import { z } from 'zod';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+
+// Initialize OpenAI with API key
+const openai = createOpenAI({
+  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY || '',
+});
 
 // Define medical assessment tool
 const medicalAssessmentTool = tool({
@@ -243,8 +248,18 @@ Remember: You're here to inform, support, and guide - not to replace professiona
     return result.toDataStreamResponse();
   } catch (error) {
     console.error('Chat API error:', error);
+
+    // Provide more specific error messages
+    const errorMessage = error instanceof Error ? error.message : 'Failed to generate response';
+    const isApiKeyError = errorMessage.includes('API key') || errorMessage.includes('apiKey') || errorMessage.includes('401');
+
     return new Response(
-      JSON.stringify({ error: 'Failed to generate response' }),
+      JSON.stringify({
+        error: isApiKeyError
+          ? 'OpenAI API key not configured. Please check your environment variables.'
+          : 'Failed to generate response. Please try again.',
+        details: process.env.NODE_ENV === 'development' ? errorMessage : undefined
+      }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }
