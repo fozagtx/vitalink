@@ -32,7 +32,7 @@ export default function MedicalChatBot() {
   const { animationState, setAnimationState, setMood, resetToIdle } = useDrChickStore();
 
   // Use Vercel AI SDK's useChat hook with streaming
-  const { messages, input, handleInputChange, handleSubmit, isLoading, append } = useChat({
+  const { messages, input, handleInputChange, handleSubmit, isLoading, append, setMessages, setInput } = useChat({
     api: '/api/chat',
     initialMessages: [
       {
@@ -86,6 +86,33 @@ export default function MedicalChatBot() {
       }, 3000);
     }
   }, [isOpen, hasGreeted, muteAnimations, setAnimationState, setMood, resetToIdle]);
+
+  // Reset chat state when widget is closed
+  useEffect(() => {
+    if (!isOpen) {
+      // Stop any ongoing audio
+      stopSpeaking();
+
+      // Reset chat messages to initial state
+      setMessages([
+        {
+          id: 'welcome-message',
+          role: 'assistant',
+          content: 'Hey there! 👋 I\'m Dr. Chick, your VitalView AI health buddy. Ask me about symptoms, health tips, or wellness advice - I\'m here to help!\n\n💡 Just a heads up: I give general info, not medical diagnosis. For emergencies, call 911!'
+        }
+      ]);
+
+      // Clear input field
+      setInput('');
+
+      // Reset greeting flag so user sees it again
+      setHasGreeted(false);
+
+      // Reset animation state
+      resetToIdle();
+      setMood('', false);
+    }
+  }, [isOpen, setMessages, setInput, resetToIdle, setMood]);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
