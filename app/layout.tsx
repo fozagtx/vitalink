@@ -7,8 +7,8 @@ import MedicalChatBot from '@/components/MedicalChatBot'
 // const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Mentoxy - Your Path to Mental Wellness',
-  description: 'Science-backed mental wellness platform. Track your emotional well-being, sleep patterns, and mental health with personalized insights.',
+  title: 'VitalView AI - Your Medical Health Analysis Platform',
+  description: 'AI-powered medical report analysis, health metrics tracking, and personalized health insights. Upload medical documents, track BMI, and find nearby care facilities.',
 }
 
 export default function RootLayout({
